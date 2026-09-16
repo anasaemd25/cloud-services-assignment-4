@@ -1,24 +1,43 @@
-# OpenShift Clients
+# Assignment 4 - Containerized 3-Tier Application on CSC Rahti
 
-The OpenShift client `oc` simplifies working with Kubernetes and OpenShift
-clusters, offering a number of advantages over `kubectl` such as easy login,
-kube config file management, and access to developer tools. The `kubectl`
-binary is included alongside for when strict Kubernetes compliance is necessary.
+## Application Description
+This application is a 3 tier web app deployed on CSC Rahti (OpenShift/Kubernetes):
+- **Frontend**: Nginx web server exposed to the public internet via a Rahti Route.
+- **Backend**: Python Flask REST API running inside the internal cluster network.
+- **Database**: MySQL 8.0 database with a Persistent Volume Claim (PVC) for data storage.
 
-To learn more about OpenShift, visit [docs.openshift.com](https://docs.openshift.com)
-and select the version of OpenShift you are using.
+**Live URL**: http://frontend-cloud-services-assignment-2.2.rahtiapp.fi
 
-## Installing the tools
+---
 
-After extracting this archive, move the `oc` and `kubectl` binaries
-to a location on your PATH such as `/usr/local/bin`. Then run:
+## Configuration: ConfigMaps vs. Secrets
+- **ConfigMap (`app-config`)**: Used for non-sensitive settings like `DB_HOST`, `DB_PORT`, `DB_NAME`, and `DB_USER`. These settings can safely be stored in Git.
+- **Secret (`generic-mysql-secret`)**: Used for sensitive credentials like `MYSQL_ROOT_PASSWORD` and `DB_PASSWORD`. Secrets keep sensitive data hidden so passwords are never committed to GitHub.
 
-    oc login [API_URL]
+---
 
-to start a session against an OpenShift cluster. After login, run `oc` and
-`oc help` to learn more about how to get started with OpenShift.
+## Orchestration Experiments
 
-## License
+### 1. Pod Recovery (Self-Healing)
+- **Action**: Manually deleted the backend pod using `oc delete pod <backend-pod-name>`.
+- **Result**: Rahti noticed the pod was missing and automatically launched a new backend pod to keep the required replica count active.
 
-OpenShift is licensed under the Apache Public License 2.0. The source code for this
-program is [located on github](https://github.com/openshift/oc).
+![Pod Recovery Screenshot](screenshots/experiment-1-pod-recovery.png)
+
+### 2. Scaling
+- **Action**: Scaled the backend deployment to 3 replicas using `oc scale deployment/backend --replicas=3`.
+- **Result**: Rahti started 3 running backend pods simultaneously. The frontend service automatically load-balances requests across all available backend pods without needing individual IP addresses.
+
+![Scaling Screenshot](screenshots/experiment-2-scaling.png)
+
+### 3. Database Persistence
+- **Action**: Deleted the MySQL database pod using `oc delete pod <database-pod-name>`.
+- **Result**: A new database pod started and connected to the existing Persistent Volume Claim (`mysql-pvc`), keeping all database data intact.
+
+![Database Persistence Screenshot](screenshots/experiment-3-persistence.png)
+
+---
+
+## Comparison: Rahti (PaaS) vs. cPouta + Docker Compose (IaaS)
+- **cPouta + Docker Compose (IaaS)**: Required manually renting and configuring a virtual machine, installing Docker, and managing containers on a single host. If the VM went down, everything stopped.
+- **Rahti (PaaS / Kubernetes)**: Handles the underlying virtual machines automatically. It provides built-in container orchestration, self-healing, scaling, rolling updates, and internal networking across cluster nodes.
