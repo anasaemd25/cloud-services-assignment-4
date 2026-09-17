@@ -1,75 +1,125 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Assignment 4 - App</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 40px; line-height: 1.6; }
-        .box { padding: 20px; background-color: #f4f4f4; border-radius: 8px; margin-bottom: 20px; }
-        img { max-width: 100%; height: auto; border: 1px solid #ddd; margin-top: 10px; }
-    </style>
-</head>
-<body>
-    <h1>Cloud Services - Assignment 4</h1>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Assignment 4 - App</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 40px;
+                line-height: 1.6;
+            }
+            .box {
+                padding: 20px;
+                background-color: #f4f4f4;
+                border-radius: 8px;
+                margin-bottom: 20px;
+            }
+            img {
+                max-width: 100%;
+                height: auto;
+                border: 1px solid #ddd;
+                margin-top: 10px;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Cloud Services - Assignment 4</h1>
 
-    <div class="box">
-        <h2>Live Database Test</h2>
-        <p><strong>Message:</strong> <span id="msg">Loading...</span></p>
-        <p><strong>Total Visitors:</strong> <span id="count">Loading...</span></p>
-        <p><strong>Database Time:</strong> <span id="time">Loading...</span></p>
-    </div>
+        <div class="box">
+            <h2>Live Database Test</h2>
+            <p>
+                <strong>Message:</strong>
+                <span id="msg">Loading...</span>
+            </p>
+            <p>
+                <strong>Total Visitors:</strong>
+                <span id="count">Loading...</span>
+            </p>
+            <p>
+                <strong>Database Time:</strong>
+                <span id="time">Loading...</span>
+            </p>
+        </div>
 
-    <h2>Application Description</h2>
-    <p>This is a 3-tier web application running on CSC Rahti:</p>
-    <ul>
-        <li><strong>Frontend:</strong> An Nginx web server open to the public through a Rahti Route.</li>
-        <li><strong>Backend:</strong> A Python Flask REST API running inside the private cluster network.</li>
-        <li><strong>Database:</strong> A MySQL database connected to a Persistent Volume Claim (PVC) to store data safely.</li>
-    </ul>
+        <h2>Application Description</h2>
+        <p>This is a 3-tier web application running on CSC Rahti:</p>
+        <ul>
+            <li>
+                <strong>Frontend:</strong>
+                An Nginx web server open to the public through a Rahti Route.
+            </li>
+            <li>
+                <strong>Backend:</strong>
+                A Python Flask REST API running inside the private cluster network.
+            </li>
+            <li>
+                <strong>Database:</strong>
+                A MySQL database connected to a Persistent Volume Claim (PVC) to store data safely.
+            </li>
+        </ul>
 
-    <h2>Configuration: ConfigMaps vs. Secrets</h2>
-    <p>
-        I used a <strong>ConfigMap</strong> for normal settings that don't need to be hidden, like DB_HOST or DB_NAME.
-        For sensitive stuff like database passwords, I used a <strong>Secret</strong> instead. Secrets keep credentials safe in Rahti so passwords never get leaked or exposed on GitHub.
-    </p>
+        <h2>Configuration: ConfigMaps vs. Secrets</h2>
+        <p>
+            I used a
+            <strong>ConfigMap</strong>
+            for normal settings that don't need to be hidden, like DB_HOST or DB_NAME. For sensitive
+            stuff like database passwords, I used a
+            <strong>Secret</strong>
+            instead. Secrets keep credentials safe in Rahti so passwords never get leaked or exposed
+            on GitHub.
+        </p>
 
-    <h2>Database Persistence</h2>
-    <p>
-        When using Docker Compose locally, data gets saved straight to the computer's local hard drive. On Rahti, storage uses a <strong>PersistentVolumeClaim (PVC)</strong> instead.
-        If a physical server in the cloud fails, Rahti automatically moves the database pod to another node and plugs the exact same storage back into it, so no data is lost.
-    </p>
+        <h2>Database Persistence</h2>
+        <p>
+            When using Docker Compose locally, data gets saved straight to the computer's local hard
+            drive. On Rahti, storage uses a
+            <strong>PersistentVolumeClaim (PVC)</strong>
+            instead. If a physical server in the cloud fails, Rahti automatically moves the database
+            pod to another node and plugs the exact same storage back into it, so no data is lost.
+        </p>
 
-    <h2>Platform Comparison: Rahti (PaaS) vs. cPouta (IaaS)</h2>
-    <p>
-        IaaS forces the user to manually set up virtual machines, install the operating system, and configure everything yourself.
-        With PaaS like Rahti, the platform manages the actual servers for you. It handles public routing, automatic scaling, and fixes broken pods automatically.
-    </p>
+        <h2>Platform Comparison: Rahti (PaaS) vs. cPouta (IaaS)</h2>
+        <p>
+            IaaS forces the user to manually set up virtual machines, install the operating system,
+            and configure everything yourself. With PaaS like Rahti, the platform manages the actual
+            servers for you. It handles public routing, automatic scaling, and fixes broken pods
+            automatically.
+        </p>
 
-    <h2>Problems Encountered</h2>
-    <p><strong>Problem:</strong> I accidentally left plain text passwords inside configuration files early on.</p>
-    <p><strong>Solution:</strong> I removed all hardcoded passwords, stored them inside a Rahti Secret object, then referenced them through environment variables, and added a `.gitignore` file to stop private files from getting pushed to GitHub.</p>
+        <h2>Problems Encountered</h2>
+        <p>
+            <strong>Problem:</strong>
+            I accidentally left plain text passwords inside configuration files early on.
+        </p>
+        <p>
+            <strong>Solution:</strong>
+            I removed all hardcoded passwords, stored them inside a Rahti Secret object, then
+            referenced them through environment variables, and added a `.gitignore` file to stop
+            private files from getting pushed to GitHub.
+        </p>
 
-    <h2>GitHub Repository</h2>
-    <p>
-        <a href="https://github.com/anasaemd/cloud-services-assignment-4" target="_blank">
-            Link to my Git Repository with all the documentation and screenshots
-        </a>
-    </p>
+        <h2>GitHub Repository</h2>
+        <p>
+            <a href="https://github.com/anasaemd25/cloud-services-assignment-4" target="_blank">
+                Link to my Git Repository with all the documentation and screenshots
+            </a>
+        </p>
 
-    <script>
-        fetch('/api')
-            .then(response => response.json())
-            .then(data => {
-                if (data.error) {
-                    document.getElementById('msg').innerText = "Error: " + data.error;
-                } else {
-                    document.getElementById('msg').innerText = data.message;
-                    document.getElementById('count').innerText = data.visitor_count;
-                    document.getElementById('time').innerText = data.db_time;
-                }
-            })
-            .catch(error => console.error('Error fetching data:', error));
-    </script>
-</body>
+        <script>
+            fetch("/api")
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.error) {
+                        document.getElementById("msg").innerText = "Error: " + data.error;
+                    } else {
+                        document.getElementById("msg").innerText = data.message;
+                        document.getElementById("count").innerText = data.visitor_count;
+                        document.getElementById("time").innerText = data.db_time;
+                    }
+                })
+                .catch((error) => console.error("Error fetching data:", error));
+        </script>
+    </body>
 </html>
