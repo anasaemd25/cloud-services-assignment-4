@@ -57,6 +57,9 @@ This application is a 3-tier web app deployed on CSC Rahti (OpenShift/Kubernetes
 **Web App V2.0 Verification**:
 ![App Version 2 Verification](screenshots/V2.0.png)
 
+**Live WebSite**:
+![Live Website](screenshots/Assigment-4-website-live.png)
+
 ---
 
 ## Problems Encountered and Solutions

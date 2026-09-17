@@ -6,10 +6,10 @@ app = Flask(__name__)
 
 def get_db_connection():
     return mysql.connector.connect(
-        host=os.environ.get('DB_HOST', 'db'),
-        user=os.environ.get('DB_USER', 'root'),
-        password=os.environ.get('DB_PASSWORD', 'root'),
-        database=os.environ.get('DB_NAME', 'app_db')
+        host=os.environ.get('DB_HOST', 'database'),
+        user=os.environ.get('DB_USER', 'appuser'),
+        password=os.environ.get('DB_PASSWORD', 'changeme'),
+        database=os.environ.get('DB_NAME', 'appdb')
     )
 
 @app.route('/api')
@@ -18,15 +18,23 @@ def index():
         conn = get_db_connection()
         cursor = conn.cursor()
         
-        # WRITE: Add a new visitor
+        # Automatically create table if missing
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS visitors (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                visit_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
+        
+        # WRITE operation
         cursor.execute("INSERT INTO visitors () VALUES ()")
         conn.commit()
         
-        # READ 1: Count total visitors
+        # READ 1 operation
         cursor.execute("SELECT COUNT(*) FROM visitors")
         visitor_count = cursor.fetchone()[0]
         
-        # READ 2: Get current database time
+        # READ 2 operation
         cursor.execute("SELECT NOW()")
         db_time = cursor.fetchone()[0]
         
