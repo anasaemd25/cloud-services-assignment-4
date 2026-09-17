@@ -26,7 +26,7 @@ def index():
     )
 
     cur = conn.cursor()
-    cur.execute("SELECT 'Hello from MySQL via Flask!'")
+    cur.execute("SELECT 'Hello from MySQL via Flask V2.0!!!'")
     row = cur.fetchone()
 
     cur.close()
